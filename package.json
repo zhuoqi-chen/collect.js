@@ -1,0 +1,37 @@
+{
+  "name": "collect",
+  "version": "1.0.0",
+  "description": "collect",
+  "main": "index.js",
+  "scripts": {
+    "dev": "webpack --mode=development --watch",
+    "build": "webpack --mode=production --progress --hide-modules",
+    "build:rollup": "rollup -c"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zhuoqi-chen/collect.js.git"
+  },
+  "keywords": ["collect.js"],
+  "author": "zhuoqi_chen@126.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zhuoqi-chen/collect.js/issues"
+  },
+  "homepage": "https://github.com/zhuoqi-chen/collect.js#readme",
+  "dependencies": {
+    "flyio": "^0.5.9",
+    "get-selector": "^1.0.1"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-loader": "^7.1.4",
+    "babel-preset-env": "^1.7.0",
+    "rollup": "^0.59.2",
+    "rollup-plugin-babel": "^3.0.4",
+    "url-loader": "^1.0.1",
+    "webpack": "^4.8.3",
+    "webpack-bundle-analyzer": "^2.13.1",
+    "webpack-cli": "^2.1.3"
+  }
+}
