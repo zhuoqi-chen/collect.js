@@ -1,7 +1,9 @@
 import getSelector from "get-selector";
 import fly from "flyio";
-const SPACE_TIME = 5000;
+const SPACE_TIME = 1000;
 const IS_DEBUGGER = true;
+const API_URL =
+  "https://easy-mock.com/mock/5b02697255348c1c9545d9cc/api/channel";
 class Collect {
   constructor() {
     this.userInfo = {};
@@ -60,6 +62,7 @@ class Collect {
     };
   }
   _resetData() {
+    IS_DEBUGGER && console.log("_resetData");
     this.startTime = Date.now();
     this.behaviors = [];
   }
@@ -77,7 +80,7 @@ class Collect {
    * 有并在一定时间内,就将referrer页的用户行为收集
    */
   _afterEnter() {
-    IS_DEBUGGER && console.log("_afterEnter", location.href);
+    IS_DEBUGGER && console.log("_afterEnter");
     this._getData();
     this._resetData();
   }
@@ -124,11 +127,8 @@ class Collect {
    * post数据
    */
   _post(data) {
-    console.log("_post", data);
-    fly.post(
-      "https://easy-mock.com/mock/5b02697255348c1c9545d9cc/api/channel",
-      data
-    );
+    IS_DEBUGGER && console.log("_post", data);
+    return fly.post(API_URL, data);
   }
   /**
    * 触发收集事件

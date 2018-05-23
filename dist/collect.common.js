@@ -10,7 +10,8 @@ var fly = _interopDefault(require('flyio'));
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-var SPACE_TIME = 5000;
+var SPACE_TIME = 1000;
+var API_URL = "https://easy-mock.com/mock/5b02697255348c1c9545d9cc/api/channel";
 
 var Collect = function () {
   function Collect() {
@@ -79,6 +80,7 @@ var Collect = function () {
   }, {
     key: "_resetData",
     value: function _resetData() {
+      console.log("_resetData");
       this.startTime = Date.now();
       this.behaviors = [];
     }
@@ -102,7 +104,7 @@ var Collect = function () {
   }, {
     key: "_afterEnter",
     value: function _afterEnter() {
-      console.log("_afterEnter", location.href);
+      console.log("_afterEnter");
       this._getData();
       this._resetData();
     }
@@ -165,7 +167,7 @@ var Collect = function () {
     key: "_post",
     value: function _post(data) {
       console.log("_post", data);
-      fly.post("https://easy-mock.com/mock/5b02697255348c1c9545d9cc/api/channel", data);
+      return fly.post(API_URL, data);
     }
     /**
      * 触发收集事件
