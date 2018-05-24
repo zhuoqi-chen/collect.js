@@ -2,8 +2,14 @@ import getSelector from "get-selector";
 import fly from "flyio";
 const SPACE_TIME = 1000;
 const IS_DEBUGGER = true;
+const INTERVAL_FRO_CLICK_TO_HTTP = 10;
 const API_URL =
   "https://easy-mock.com/mock/5b02697255348c1c9545d9cc/api/channel";
+const WEIGHT = {
+  HIGH: 3,
+  MEDIUM: 2,
+  LOW: 1
+};
 class Collect {
   constructor() {
     this.userInfo = {};
@@ -35,20 +41,31 @@ class Collect {
    * 注册事件
    */
   _addEventListener() {
+    const _this = this;
     //关闭浏览器之前
     const unload = window.onunload || (() => {});
     window.onunload = () => {
       this._beforeLeave();
       unload();
     };
+    const oriXOpen = XMLHttpRequest.prototype.open;
+    XMLHttpRequest.prototype.open = function(
+      method,
+      url,
+      asncFlag,
+      user,
+      password
+    ) {
+      _this._dispatch("http", { url });
+      oriXOpen.call(this, method, url, asncFlag, user, password);
+    };
     //注册全局点击事件
     document.body.onclick = e => {
       const { target } = e;
       const { nodeName, attributes } = target;
       this._dispatch("click", {
-        dom: getSelector(target),
-        offsetTop: target.offsetTop,
-        offsetLeft: target.offsetLeft
+        DOMPath: getSelector(target),
+        DOMRect: target.getBoundingClientRect()
       });
       if (
         nodeName.toLowerCase() === "a" &&
@@ -58,6 +75,7 @@ class Collect {
       ) {
         this._beforeLeave();
       }
+      this._preHandleBehaviors();
       IS_DEBUGGER && console.log(this.behaviors);
     };
   }
@@ -84,13 +102,35 @@ class Collect {
     this._getData();
     this._resetData();
   }
+  _preHandleBehaviors() {
+    const behaviors = [];
+    this.behaviors.reduce((accumulator, currentValue) => {
+      if (
+        accumulator &&
+        accumulator.event === "http" &&
+        currentValue.event === "click" &&
+        currentValue.timestamp - accumulator.timestamp <
+          INTERVAL_FRO_CLICK_TO_HTTP &&
+        currentValue.weight < WEIGHT.MEDIUM
+      ) {
+        currentValue.weight = WEIGHT.MEDIUM;
+        currentValue.data.requestUrl = accumulator.data.url;
+      }
+      if (currentValue.event === "click") {
+        behaviors.push(currentValue);
+      }
+      return currentValue;
+    }, null);
+    return behaviors;
+  }
   /**
    * 存储本页收集的数据
    */
   _saveData() {
     IS_DEBUGGER && console.log("_saveData");
     const href = window.location.href;
-    const { clientId = null, userId = null, behaviors = [] } = this;
+    const { clientId = null, userId = null } = this;
+    const behaviors = this._preHandleBehaviors();
     if (!behaviors.length || !clientId) return;
     const time = Date.now();
     const stayTime = time - this.startTime;
@@ -135,9 +175,10 @@ class Collect {
    * @param {String} event
    * @param {Object} data
    */
-  _dispatch(event, data) {
+  _dispatch(event, data, weight = 1) {
     this.behaviors.push({
       event,
+      weight: WEIGHT.LOW,
       timestamp: Date.now(),
       data
     });
