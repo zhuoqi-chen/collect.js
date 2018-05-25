@@ -20,7 +20,10 @@
                     sweet, but not too short so folks don't simply skip over it entirely.</p>
                 <p>
                     <a href="./page-b.html" class="btn btn-primary my-2">go to page-b.html</a>
-                    <span id="ajax" class="btn btn-primary my-2">axaj</span>
+                    <span id="get" class="btn btn-primary my-2">get</span>
+                    <span id="post" class="btn btn-primary my-2">post</span>
+                    <span id="put" class="btn btn-primary my-2">put</span>
+                    <span id="delete" class="btn btn-primary my-2">delete</span>
                 </p>
                 <p>empty p</p>
             </div>
@@ -32,10 +35,14 @@
         collect.config({
             userId: '123'
         })
-        const button = document.querySelector("#ajax")
-        button.onclick = function () {
-            axios.get('/')
-        }
+        const arr = ['get', 'post', 'put', 'delete']
+        arr.forEach(element => {
+            console.log(`addEventListener ${element}`);
+            const button = document.querySelector(`#${element}`)
+            button.onclick = function () {
+                axios[element]('/')
+            }
+        });
     </script>
 </body>
 

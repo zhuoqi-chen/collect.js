@@ -56,7 +56,11 @@ class Collect {
       user,
       password
     ) {
-      _this._dispatch("http", { url });
+      const weight = /POST|PUT|DELETE|PATCH/.test(method)
+        ? WEIGHT.HIGH
+        : WEIGHT.MEDIUM;
+      console.log("weight", weight);
+      _this._dispatch("http", { method, url }, weight);
       oriXOpen.call(this, method, url, asncFlag, user, password);
     };
     //注册全局点击事件
@@ -111,9 +115,9 @@ class Collect {
         currentValue.event === "click" &&
         currentValue.timestamp - accumulator.timestamp <
           INTERVAL_FRO_CLICK_TO_HTTP &&
-        currentValue.weight < WEIGHT.MEDIUM
+        currentValue.weight < accumulator.weight
       ) {
-        currentValue.weight = WEIGHT.MEDIUM;
+        currentValue.weight = accumulator.weight;
         currentValue.data.requestUrl = accumulator.data.url;
       }
       if (currentValue.event === "click") {
@@ -175,10 +179,10 @@ class Collect {
    * @param {String} event
    * @param {Object} data
    */
-  _dispatch(event, data, weight = 1) {
+  _dispatch(event, data, weight = WEIGHT.LOW) {
     this.behaviors.push({
       event,
-      weight: WEIGHT.LOW,
+      weight: weight,
       timestamp: Date.now(),
       data
     });
