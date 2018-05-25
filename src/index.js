@@ -1,17 +1,18 @@
 import getSelector from "get-selector";
 import fly from "flyio";
-const SPACE_TIME = 1000;
+import { cssPath } from "./util";
+const SPACE_TIME = 5000000;
 const IS_DEBUGGER = true;
 const INTERVAL_FRO_CLICK_TO_HTTP = 10;
-const API_URL =
-  "https://easy-mock.com/mock/5b02697255348c1c9545d9cc/api/channel";
+const API_BASE_URL = "http://192.168.8.150:3000/projects";
 const WEIGHT = {
   HIGH: 3,
   MEDIUM: 2,
   LOW: 1
 };
 class Collect {
-  constructor() {
+  constructor({ clientId = "" }) {
+    this.clientId = clientId;
     this.userInfo = {};
     this._init();
   }
@@ -63,6 +64,7 @@ class Collect {
     document.body.onclick = e => {
       const { target } = e;
       const { nodeName, attributes } = target;
+      console.log(cssPath(target));
       this._dispatch("click", {
         DOMPath: getSelector(target),
         DOMRect: target.getBoundingClientRect()
@@ -168,7 +170,7 @@ class Collect {
    */
   _post(data) {
     IS_DEBUGGER && console.log("_post", data);
-    return fly.post(API_URL, data);
+    return fly.post(`${API_BASE_URL}/${this.clientId}/log`, data);
   }
   /**
    * 触发收集事件
@@ -184,8 +186,10 @@ class Collect {
     });
   }
   config({ clientId, userId }) {
-    this.clientId = clientId;
-    this.userId = userId;
+    if (clientId) this.clientId = clientId;
+    if (userId) this.userId = userId;
   }
 }
-export const collect = new Collect();
+export const collect = new Collect({
+  clientId: "a58f9c87-02ff-47ec-887b-adee73e4161b"
+});
