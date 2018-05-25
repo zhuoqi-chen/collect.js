@@ -20,8 +20,7 @@
   },
   "homepage": "https://github.com/zhuoqi-chen/collect.js#readme",
   "dependencies": {
-    "flyio": "^0.5.9",
-    "get-selector": "^1.0.1"
+    "flyio": "^0.5.9"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",

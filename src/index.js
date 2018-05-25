@@ -1,4 +1,3 @@
-import getSelector from "get-selector";
 import fly from "flyio";
 import { cssPath } from "./util";
 const SPACE_TIME = 5000000;
@@ -64,9 +63,8 @@ class Collect {
     document.body.onclick = e => {
       const { target } = e;
       const { nodeName, attributes } = target;
-      console.log(cssPath(target));
       this._dispatch("click", {
-        DOMPath: getSelector(target),
+        DOMPath: cssPath(target),
         DOMRect: target.getBoundingClientRect()
       });
       if (

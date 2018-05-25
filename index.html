@@ -14,7 +14,7 @@
     <main role="main">
 
         <section class="jumbotron text-center">
-            <div class="container">
+            <div class="container" id="container">
                 <h1 class="jumbotron-heading">Album example</h1>
                 <p class="lead text-muted">Something short and leading about the collection below—its contents, the creator, etc. Make it short and
                     sweet, but not too short so folks don't simply skip over it entirely.</p>
@@ -22,6 +22,7 @@
                     <a href="./page-b.html" class="btn btn-primary my-2">go to page-b.html</a>
                     <span id="ajax" class="btn btn-primary my-2">axaj</span>
                 </p>
+                <p>empty p</p>
             </div>
         </section>
     </main>
@@ -29,7 +30,6 @@
     <script src="./dist/collect.js"></script>
     <script>
         collect.config({
-            clientId: 'xxxx',
             userId: '123'
         })
         const button = document.querySelector("#ajax")

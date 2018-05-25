@@ -1,17 +1,25 @@
 function pathname(el) {
-  return (
-    el.nodeName.toLowerCase() +
-    (el.id ? "#" + el.id : "") +
-    (el.className ? "." + el.className.replace(/\s+/g, ".") : "")
-  );
+  if (el.id) {
+    return "#" + el.id;
+  }
+  let str = el.nodeName.toLowerCase();
+  if (el.className) {
+    const className = el.className
+      .split(" ")
+      .sort()
+      .join(".");
+    return str + "." + className;
+  }
+  return str;
 }
 export function cssPath(el) {
   var path = [];
-  path.unshift(pathname(el));
-  while (
-    el.nodeName.toLowerCase() != "html" &&
-    (el = el.parentNode) &&
-    path.unshift(pathname(el))
-  );
+  while (el.parentNode) {
+    path.unshift(pathname(el));
+    if (el.id) {
+      break;
+    }
+    el = el.parentNode;
+  }
   return path.join(" > ");
 }
